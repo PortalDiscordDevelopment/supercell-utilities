@@ -27,7 +27,6 @@ module.exports = {
             return JSON.parse(response.body);
         }
         let tag = interaction.options.getString('tag');
-
         getApi(`https://api.clashofclans.com/v1/players/%23${tag.replace('#', "")}`)
             .then(res => {
                 let embed = new Discord.MessageEmbed()
@@ -76,6 +75,8 @@ module.exports = {
                     categories.push('Heroes')
                     embeds.push(heroesEmbed)
                 }
+
+
                 if (res.troops) {
                     for (let i = 0; i < res.troops.length; i++) {
                         if (res.troops[i].village == 'home') {
@@ -159,6 +160,7 @@ module.exports = {
             })
             .catch(error => {
                 if (String(error).includes('404')) return interaction.reply('Could not find player!')
+                else interaction.reply(String(error))
             })
     },
 };
