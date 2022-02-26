@@ -23,22 +23,22 @@ module.exports = {
                 getCommandError(interaction, error);
             }
         }
-        if (interaction.isButton()) {
-            let name = interaction.message.embeds[0].author.name
-            if (interaction.customId == 'up') {
-                interaction.client.channels.fetch('903716195633598484')
-                    .then(channel => {
-                        channel.send('@everyone' + name + ' has been suggested to be promoted!')
-                    })
-            }
-            if (interaction.customId == 'down') {
-                interaction.client.channels.fetch('903716195633598484')
-                    .then(channel => {
-                        channel.send('@everyone' + name + ' has been suggested to be demoted!')
-                    })
-            }
+        // if (interaction.isButton()) {
+        //     let name = interaction.message.embeds[0].author.name
+        //     if (interaction.customId == 'up') {
+        //         interaction.client.channels.fetch('903716195633598484')
+        //             .then(channel => {
+        //                 channel.send('@everyone, ' + name + ' has been suggested to be promoted!')
+        //             })
+        //     }
+        //     if (interaction.customId == 'down') {
+        //         interaction.client.channels.fetch('903716195633598484')
+        //             .then(channel => {
+        //                 channel.send('@everyone, ' + name + ' has been suggested to be demoted!')
+        //             })
+        //     }
 
-            interaction.reply({ content: `You have voted ${interaction.customId} for ${name}!`, ephemeral: true })
-        }
+        //     interaction.reply({ content: `You have voted ${interaction.customId} for ${name}!`, ephemeral: true })
+        // }
     },
 };

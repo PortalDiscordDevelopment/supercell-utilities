@@ -1,7 +1,7 @@
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { clientID, guildID, token, global } = require('../data/config/config.json');
-const { getTime, getCommandError } = require('../funcs.js');
+const { getTime, getCommandError, getDatabase } = require('../funcs.js');
 
 module.exports = {
     name: 'ready',
@@ -32,5 +32,7 @@ module.exports = {
                 await console.log(`${getTime(new Date())} | Loading application commands failed.`);
             }
         })();
+
+        await getDatabase().users.sync().then(() => console.log(`${getTime(new Date())} | Successfully synced users`))
     }
 }

@@ -3,6 +3,7 @@ const config = require('./data/config/config.json')
 const Discord = require('discord.js');
 const got = require('got')
 const moment = require('moment');
+const Sequelize = require('sequelize')
 const hasteURLs = [
     "https://hst.sh",
     "https://hastebin.com",
@@ -19,7 +20,41 @@ function getRandomNumber(min, max) {
     return random;
 }
 
+function getDatabase() {
+    const sequelize = new Sequelize('database', 'username', 'password', {
+        host: 'localhost',
+        dialect: 'sqlite',
+        logging: false,
+        storage: 'data/database/database.sqlite'
+    });
+
+    // const Guilds = sequelize.define('guilds', {
+    //     name: Sequelize.STRING
+    // })
+
+    const Users = sequelize.define('users', {
+        name: {
+            type: Sequelize.STRING,
+            unique: true
+        },
+        accounts: Sequelize.ARRAY(Sequelize.TEXT)
+    })
+
+    return { users: Users }
+}
+
 module.exports = {
+    async getApi(link) {
+        let response = await got.get({
+            url: link,
+            headers: {
+                'Accept': "application/json",
+                'Authorization': "Bearer " + config.cocToken
+            }
+        });
+        return JSON.parse(response.body);
+    },
+    getDatabase: getDatabase,
     getTime(date) {
         return moment(Number(date)).format("H:mm:ss");
     },
