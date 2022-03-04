@@ -51,7 +51,7 @@ module.exports = {
             if (accounts[0] == '') accounts = accounts.slice(1)
             if (accounts.length >= 15) return await interaction.reply({ content: 'You can\'t add any more accounts.', ephemeral: true });
             let tag = interaction.options.getString('tag');
-            if (user.accounts.includes(tag.replace('#', ""))) return interaction.update({ content: 'You have this account already registered!', components: [], embeds: [] })
+            if (user.accounts.includes(tag.replace('#', ""))) return interaction.reply({ content: 'You have this account already registered!', components: [], embeds: [] })
             await interaction.replied ? interaction.editReply('Checking availability...') : interaction.reply('Checking availability...')
             getApi(`https://api.clashofclans.com/v1/players/%23${tag.replace('#', "")}`)
                 .then(res => {

@@ -28,28 +28,44 @@ function getDatabase() {
         storage: 'data/database/database.sqlite'
     });
 
-    // const Guilds = sequelize.define('guilds', {
-    //     name: Sequelize.STRING
-    // })
+    const Guilds = sequelize.define('guilds', {
+        name: {
+            type: Sequelize.STRING,
+            unique: true
+        },
+        mainCocClan: Sequelize.STRING,
+        sisterCocClans: Sequelize.ARRAY(Sequelize.TEXT),
+        mainCrClan: Sequelize.STRING,
+        sisterCrClans: Sequelize.ARRAY(Sequelize.TEXT),
+        mainBsClub: Sequelize.STRING,
+        sisterBsClubs: Sequelize.ARRAY(Sequelize.TEXT)
+    })
 
     const Users = sequelize.define('users', {
         name: {
             type: Sequelize.STRING,
             unique: true
         },
-        accounts: Sequelize.ARRAY(Sequelize.TEXT)
+        cocAccounts: Sequelize.ARRAY(Sequelize.TEXT),
+        crAccounts: Sequelize.ARRAY(Sequelize.TEXT),
+        bsAccounts: Sequelize.ARRAY(Sequelize.TEXT)
     })
 
-    return { users: Users }
+    return { guilds: Guilds, users: Users }
 }
 
 module.exports = {
-    async getApi(link) {
+    async getApi(game, link) {
+        function token() {
+            if (game == 'coc') return config.cocToken;
+            if (game == 'cr') return config.crToken;
+            if (game == 'bs') return config.bsToken;
+        }
         let response = await got.get({
             url: link,
             headers: {
                 'Accept': "application/json",
-                'Authorization': "Bearer " + config.cocToken
+                'Authorization': "Bearer " + token()
             }
         });
         return JSON.parse(response.body);
