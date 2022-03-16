@@ -60,12 +60,78 @@ module.exports = {
         if (!data) return await interaction.user.id == user.id ? interaction.reply({ content: 'You have not saved any accounts yet, please register an account with `/config` or specify a tag.' }) : interaction.reply({ content: 'This user has no accounts linked to their account.' })
         let embeds = [];
         let embed;
+        let title = "";
         let description = "";
+        if (tag) {
+            embed = new Discord.MessageEmbed()
+                .setColor(color)
+                .setTimestamp()
+
+            if (game == 'coc') response = await getApi(game, `https://api.clashofclans.com/v1/players/%23${tag}`);
+            if (game == 'cr') response = await getApi(game, `https://api.clashroyale.com/v1/players/%23${tag}`);
+            if (game == 'bs') response = await getApi(game, `https://api.clashofclans.com/v1/players/%23${tag}`);
+
+            if (response.tag) {
+                // Combined
+                title += response.tag
+            }
+
+            if (response.name && response.expLevel) {
+                // Combined
+                description += `**General Info**\nname: ${response.name}\nLevel: ${response.expLevel}`
+            }
+
+            if (response.trophies && response.bestTrophies && response.townHallLevel && response.townHallWeaponLevel && response.warStars) {
+                // Clash of Clans
+                embed.addField('Home Village', `Town Hall: ${response.townHallWeaponLevel ? response.townHallLevel + " | " + response.townHallWeaponLevel : response.townHallLevel}\nTrophies: ${response.trophies} | ${response.bestTrophies}\nWar Stars: ${response.warStars}`, true)
+            }
+
+            if (response.builderHallLevel && response.versusTrophies && response.bestVersusTrophies) {
+                // Clash of Clans
+                embed.addField('Builder Base', `Builder Hall: ${response.builderHallLevel}\nTrophies: ${response.versusTrophies} | ${response.bestVersusTrophies}`, true)
+            }
+
+            if (response.trophies && response.bestTrophies && response.wins && response.losses) {
+                // Clash Royale
+                description += `\nTrophies: ${response.trophies} | ${response.bestTrophies}\nWins: ${response.wins} | Losses ${response.losses} (W/L: ${Math.round(response.wins / response.losses * 100) / 100})`
+            }
+
+            if (response && response.trophies && response.highestTrophies && response.highestPowerPlayPoints && response['3vs3Victories'] && response.soloVictories && response.duoVictories && response.bestRoboRumbleTime) {
+                description += `\nTrophies: ${response.trophies} | ${response.highestTrophies}\nBest Power Play Points: ${response.highestPowerPlayPoints}\n3vs3 Wins: ${response['3vs3Victories']}\nSolo Wins: ${response.soloVictories}\nDuo Wins: ${response.duoVictories}\nBest Robo Rumble Time: ${response?.bestRoboRumbleTime}\nBest Time As Big Brawler: ${response?.bestTimeAsBigBrawler}`
+            }
+
+            if (response.currentFavouriteCard) {
+                // Clash Royale
+                embed.setThumbnail(response?.currentFavouriteCard?.iconUrls?.medium)
+            }
+
+            if (game == "coc" && (response.clan || response.league)) {
+                // Clash of Clans
+                if (response?.league?.iconUrls?.medium) embed.setThumbnail(response.league.iconUrls.medium);
+                if (response?.clan?.badgeUrls?.medium) embed.setThumbnail(response.clan.badgeUrls.medium);
+            }
+
+            if (response.attackWins && response.defenseWins && response.donations && response.donationsReceived) {
+                embed.addField('Current Season', `Successful attacks: ${response.attackWins}\nSuccessful Defenses: ${response.defenseWins}\nDonations Given: ${response.donations}\nDonations Received: ${response.donationsReceived}\nDonate ratio: ${Math.round(response.donations / response.donationsReceived * 100) / 100}`)
+            }
+
+            if (response.clan && response.role) {
+                embed.addField('Clan', `Tag: ${response.clan.tag}\nName: ${response.clan.name}${response.clan?.clanLevel ? `\nLevel: ${response.clan.clanLevel}` : ""}\nYour rank: ${response.role}`)
+            }
+
+            if (response.club) {
+                embed.addField('Club', `Tag: ${response.club.tag}\nName: ${response.club.name}`)
+            }
+
+            embed
+                .setTitle(title)
+                .setDescription(description)
+
+            return await interaction.editReply({ embeds: [embed] });
+        }
 
         if (game == 'coc') {
             let accounts = data.cocAccounts.split(',');
-            response = await getApi(game, `https://api.clashofclans.com/v1/players/%23${accounts[0]}`)
-            console.log(response)
             description = `${user.username} has ${accounts.length} account(s).\n\n`
             for (let i = 0; i < accounts.length; i++) {
                 response = await getApi(game, `https://api.clashofclans.com/v1/players/%23${accounts[i]}`)
@@ -88,6 +154,7 @@ module.exports = {
                 description += `${i + 1}. ${response.name} | Town Hall: ${response.townHallLevel}\n`;
             }
         }
+
         if (game == 'cr') {
             let accounts = data.crAccounts.split(',');
             description = `${user.username} has ${accounts.length} account(s).\n\n`
@@ -149,6 +216,5 @@ module.exports = {
             .on('end', () => {
                 interaction.editReply({ embeds: [changeEmbed], components: [] });
             })
-
     },
 };
