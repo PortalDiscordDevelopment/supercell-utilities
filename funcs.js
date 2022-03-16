@@ -188,7 +188,7 @@ module.exports = {
                         .setTitle('Something went wrong')
                         .setColor(config.color)
                         .setDescription(`Something went wrong with \`${action.commandName == undefined ? action.content.slice(1).split(/ +/)[0] : action.commandName}\`. This error got logged in my [support server](${config.invite}).\n\nCode: ${getErrorCode()}`)
-                    action.reply({ embeds: [errorEmbed], ephemeral: true })
+                        (action.replied || action.deferred) ? action.editReply({ embeds: [errorEmbed], ephemeral: true }) : action.reply({ embeds: [errorEmbed], ephemeral: true })
                 }
                 catch { }
             }).catch((err) => {
