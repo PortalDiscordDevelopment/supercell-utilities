@@ -1,9 +1,8 @@
 const { SlashCommandBuilder, strikethrough } = require('@discordjs/builders');
-const { color } = require('../../data/config/config.json');
+const { color, cooldown } = require('../../data/config/config.json');
 const { getApi, getDatabase } = require('../../funcs.js');
 const options = require('../../data/config/options.json');
 const Discord = require('discord.js');
-const got = require('got');
 
 module.exports = {
     detailedDescription: "player",
@@ -199,7 +198,7 @@ module.exports = {
         let changeEmbed = indexEmbed;
         interaction.editReply({ embeds: [changeEmbed], components: [row] })
 
-        interaction.channel.createMessageComponentCollector({ time: 60000 })
+        interaction.channel.createMessageComponentCollector({ time: cooldown })
 
             .on('collect', async (newInteraction) => {
                 if (newInteraction.customId != `${interaction.id}-menu`) return;
