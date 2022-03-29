@@ -1,5 +1,5 @@
 const Discord = require('discord.js')
-const { getRandomNumber, getColor, getPresence, getArray, getRandomUser, getRandomEmojis, getShuffleArray, getUptime, getHaste, getCapitalize, getCommandError, getDelay, getValidURL, getPaginate } = require("../../funcs.js")
+const { getApi, getRandomNumber, getPresence, getArray, getRandomUser, getRandomEmojis, getShuffleArray, getUptime, getHaste, getCapitalize, getCommandError, getDelay, getValidURL, getPaginate } = require("../../funcs.js")
 const { inspect, promisify } = require("util")
 const { exec } = require('child_process')
 const config = require('../../data/config/config.json');

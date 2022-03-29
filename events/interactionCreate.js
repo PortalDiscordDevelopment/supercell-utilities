@@ -20,12 +20,7 @@ module.exports = {
                 await command.execute(interaction);
             }
             catch (error) {
-                try {
-                    getCommandError(interaction, error);
-                }
-                catch (err) {
-                    console.error(error, err)
-                }
+                console.log(error)
             }
         }
         // if (interaction.isButton()) {
