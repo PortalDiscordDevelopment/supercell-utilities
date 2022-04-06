@@ -34,5 +34,6 @@ module.exports = {
         })();
 
         await getDatabase().users.sync().then(() => console.log(`${getTime(new Date())} | Successfully synced users`))
+        await getDatabase().guilds.sync().then(() => console.log(`${getTime(new Date())} | Successfully synced guilds`))
     }
 }

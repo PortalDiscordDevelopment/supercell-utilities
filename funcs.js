@@ -30,15 +30,22 @@ function getDatabase() {
 
     const Guilds = sequelize.define('guilds', {
         name: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING, // server ID
             unique: true
         },
-        mainCocClan: Sequelize.STRING,
-        sisterCocClans: Sequelize.ARRAY(Sequelize.TEXT),
-        mainCrClan: Sequelize.STRING,
-        sisterCrClans: Sequelize.ARRAY(Sequelize.TEXT),
-        mainBsClub: Sequelize.STRING,
-        sisterBsClubs: Sequelize.ARRAY(Sequelize.TEXT)
+        cocClan: Sequelize.STRING, // main clan tag
+        cocClans: Sequelize.ARRAY(Sequelize.TEXT), // sister clan tags
+        cocMembers: Sequelize.STRING, // members channel !main
+        cocWar: Sequelize.STRING, // war channel !main
+        cocEvents: Sequelize.STRING, // event channel !main
+        crClan: Sequelize.STRING, // main clan tag
+        crClans: Sequelize.ARRAY(Sequelize.TEXT), // sister clan tags
+        crMembers: Sequelize.STRING, // members channel
+        crEvents: Sequelize.STRING,
+        bsClub: Sequelize.STRING, // main club tag
+        bsClubs: Sequelize.ARRAY(Sequelize.TEXT), // sister club tags
+        bsEvents: Sequelize.STRING,
+        language: Sequelize.STRING // server language
     })
 
     const Users = sequelize.define('users', {
@@ -48,7 +55,8 @@ function getDatabase() {
         },
         cocAccounts: Sequelize.ARRAY(Sequelize.TEXT),
         crAccounts: Sequelize.ARRAY(Sequelize.TEXT),
-        bsAccounts: Sequelize.ARRAY(Sequelize.TEXT)
+        bsAccounts: Sequelize.ARRAY(Sequelize.TEXT),
+        language: Sequelize.STRING
     })
 
     return { guilds: Guilds, users: Users }

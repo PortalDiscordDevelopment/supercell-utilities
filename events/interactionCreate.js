@@ -20,7 +20,8 @@ module.exports = {
                 await command.execute(interaction);
             }
             catch (error) {
-                console.log(error)
+                if (error.code == 'ERR_NON_2XX_3XX_RESPONSE') return (interaction.replied || interaction.deferred) ? interaction.editReply('Couldn\'t find what you were looking for.') : interaction.reply('Couldn\'t find what you were looking for.')
+                else console.log(error)
             }
         }
         // if (interaction.isButton()) {
